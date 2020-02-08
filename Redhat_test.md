@@ -32,7 +32,7 @@ Use Enterprise-grade Linux distribution with full support from an operating syst
 Because the SSL termination is done in Apache, a standard SSL certificate must be installed.
 
 #### Database ####
-MySQL, MariaDB, or PostgreSQL. Use the InnoDB storage engine with MySQL or MariaDB.
+Use MySQL or MariaDB with the InnoDB storage engine, or PostgreSQL.
 
 #### Backup ####
 Install ownCloud, the ownCloud data directory, and database on a Btrfs filesystem. Make regular snapshots at desired intervals for zero downtime backups. Mount DB partitions with the "nodatacow" option to prevent fragmentation.
@@ -67,33 +67,33 @@ Follow these steps to install ownCloud:
 3. Download archive's corresponding checksum file, for example, owncloud-*x*.*y*.*z*.tar.bz2.md5, or owncloud-*x*.*y*.*z*.tar.bz2.sha256, (where *x*.*y*.*z* is the version number).
 4. Verify the MD5 or SHA256 sum:     
 
-    md5sum -c owncloud-x.y.z.tar.bz2.md5 < owncloud-x.y.z.tar.bz2
+    ``md5sum -c owncloud-x.y.z.tar.bz2.md5 < owncloud-x.y.z.tar.bz2``
+    
+    ``sha256sum -c owncloud-x.y.z.tar.bz2.sha256 < owncloud-x.y.z.tar.bz2``
 
-    sha256sum -c owncloud-x.y.z.tar.bz2.sha256 < owncloud-x.y.z.tar.bz2
+    ``md5sum  -c owncloud-x.y.z.zip.md5 < owncloud-x.y.z.zip``
 
-    md5sum  -c owncloud-x.y.z.zip.md5 < owncloud-x.y.z.zip
-
-    sha256sum  -c owncloud-x.y.z.zip.sha256 < owncloud-x.y.z.zip
+    ``sha256sum  -c owncloud-x.y.z.zip.sha256 < owncloud-x.y.z.zip``
 	
 5. Verify the PGP signature for authenticity:
-     
-    wget https://download.owncloud.org/community/owncloud-x.y.z.tar.bz2.asc
 
-    wget https://owncloud.org/owncloud.asc
+    ``wget https://download.owncloud.org/community/owncloud-x.y.z.tar.bz2.asc``
 
-    gpg --import owncloud.asc
+    ``wget https://owncloud.org/owncloud.asc``
 
-    gpg --verify owncloud-x.y.z.tar.bz2.asc owncloud-x.y.z.tar.bz2
+    ``gpg --import owncloud.asc``
+
+    ``gpg --verify owncloud-x.y.z.tar.bz2.asc owncloud-x.y.z.tar.bz2``
   
 6. Extract the archive contents to a single ownCloud directory by running the appropriate command for your archive type: 
 
-    tar -xjf owncloud-x.y.z.tar.bz2
+    ``tar -xjf owncloud-x.y.z.tar.bz2``
 
-    unzip owncloud-x.y.z.zip
+    ``unzip owncloud-x.y.z.zip``
 
 7. Copy the ownCloud directory to the appropriate directory. If you are running the Apache HTTP server, copy it to your Apache *document root* by using the following command:  
 
-    cp -r owncloud /path/to/webserver/document-root
+    ``cp -r owncloud /path/to/webserver/document-root``
 
 Where */path/to/webserver/document-root* is the path to your Web server, for example: ``cp -r owncloud /var/www``
 
@@ -104,36 +104,32 @@ Where */path/to/webserver/document-root* is the path to your Web server, for exa
 
 1. On Debian, Ubuntu, and their derivatives, create a ``/etc/apache2/sites-available/owncloud.conf`` file with these lines in it, replacing the *Directory* and other file paths with your own file paths:
 
-    Alias /owncloud "/var/www/owncloud/"
+    ``Alias /owncloud "/var/www/owncloud/"``
 	
-    <Directory /var/www/owncloud/>
-     Options +FollowSymlinks
-     AllowOverride All
+    ``<Directory /var/www/owncloud/>``
+    ``Options +FollowSymlinks``
+     ``AllowOverride All``
 	
-    <IfModule mod_dav.c>
-     Dav off
-    </IfModule>
+    ``<IfModule mod_dav.c>``
+    ``Dav off``
+    ``</IfModule>``
 	
-    SetEnv HOME /var/www/owncloud
-    SetEnv HTTP_HOME /var/www/owncloud
+    ``SetEnv HOME /var/www/owncloud``
+    ``SetEnv HTTP_HOME /var/www/owncloud``
 	
     </Directory>
 
 2. Create a symbolic link to ``/etc/apache2/sites-enabled``:
 
-    ln -s /etc/apache2/sites-available/owncloud.conf /etc/apache2/sites-enabled/owncloud.conf
+    ``ln -s /etc/apache2/sites-available/owncloud.conf /etc/apache2/sites-enabled/owncloud.conf``
 
 3. Enable required modules:
 
-    a2enmod rewrite
-
-    a2enmod headers
-
-    a2enmod env
-
-    a2enmod dir
-
-    a2enmod mime
+    ``a2enmod rewrite``
+    ``a2enmod headers``
+    ``a2enmod env``
+    ``a2enmod dir``
+    ``a2enmod mime``
 
 4. Disable any server-configured authentication for ownCloud, because ownCloud uses Basic authentication internally for DAV services. 
 
@@ -141,7 +137,7 @@ Where */path/to/webserver/document-root* is the path to your Web server, for exa
 
 6. Restart Apache:
 
-    service apache2 restart
+    ``service apache2 restart``
 
 
 ### Enable SSL
