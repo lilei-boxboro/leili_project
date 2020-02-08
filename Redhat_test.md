@@ -23,21 +23,21 @@ Use one machine for running the application, web and database server, and for lo
 ![deployment recommendations](.\deprecs-1.jpg)
 
 #### Components ####
-One server with at least 2 CPU cores, 16GB RAM, and local storage as needed.
+Use one server with at least 2 CPU cores, 16GB RAM, and local storage as needed.
 
 #### Operating system ####
-Enterprise-grade Linux distribution with full support from an operating system vendor. RedHat Enterprise Linux and SUSE Linux Enterprise Server 12 are recommended.
+Use Enterprise-grade Linux distribution with full support from an operating system vendor. RedHat Enterprise Linux and SUSE Linux Enterprise Server 12 are recommended.
 
 #### SSL configuration ####
-The SSL termination is done in Apache. A standard SSL certificate is required to be installed according to the official Apache documentation.
+Because the SSL termination is done in Apache, a standard SSL certificate must be installed.
 
 #### Database ####
-MySQL, MariaDB, or PostgreSQL. If using either MySQL or MariaDB, you must use the InnoDB storage engine because MyISAM is not supported.
+MySQL, MariaDB, or PostgreSQL. Use the InnoDB storage engine with MySQL or MariaDB.
 
 #### Backup ####
 Install ownCloud, the ownCloud data directory, and database on a Btrfs filesystem. Make regular snapshots at desired intervals for zero downtime backups. Mount DB partitions with the "nodatacow" option to prevent fragmentation.
 
-Alternatively, you can make nightly backups with service interruption. 
+Alternatively, make nightly backups with service interruption. 
 
 #### Authentication ####
 User authentication by using one or several LDAP or Active Directory (AD) servers. See [User Authentication with LDAP](https://doc.owncloud.org/server/10.4/admin_manual/configuration/user/user_auth_ldap.html) for information on configuring ownCloud to use LDAP and AD.
@@ -47,7 +47,7 @@ Local session management on the application server. PHP sessions are stored in a
 
 For example:
 
-``echo "tmpfs /var/lib/php5/pool-www tmpfs defaults,noatime,mode=1777 0 0" >> /etc/fstab`.``
+    echo "tmpfs /var/lib/php5/pool-www tmpfs defaults,noatime,mode=1777 0 0" >> /etc/fstab`.
 
 #### Storage ####
 Local storage
@@ -55,7 +55,7 @@ Local storage
 ### Before you begin ###
 
 - Log in with administrator privileges.
-- Ensure that [supported PHP extensions](https://doc.owncloud.org/server/10.0/admin_manual/installation/source_installation.html#prerequisites) (version 7.2 or later) are enabled and configured on your Linux system.- 
+- Ensure that [supported PHP extensions](https://doc.owncloud.com/server/10.4/admin_manual/installation/manual_installation.html#required) (version 7.2 or later) are enabled and configured on your Linux system.- 
 - Ensure [all other prerequisites](https://doc.owncloud.org/server/10.4/admin_manual/installation/manual_installation.html#prerequisites/) are met.
 
 ### Install ownCloud
@@ -67,79 +67,73 @@ Follow these steps to install ownCloud:
 3. Download archive's corresponding checksum file, for example, owncloud-*x*.*y*.*z*.tar.bz2.md5, or owncloud-*x*.*y*.*z*.tar.bz2.sha256, (where *x*.*y*.*z* is the version number).
 4. Verify the MD5 or SHA256 sum:     
 
-	 
-	``md5sum -c owncloud-x.y.z.tar.bz2.md5 < owncloud-x.y.z.tar.bz2``
+    md5sum -c owncloud-x.y.z.tar.bz2.md5 < owncloud-x.y.z.tar.bz2
 
-	``sha256sum -c owncloud-x.y.z.tar.bz2.sha256 < owncloud-x.y.z.tar.bz2``
+    sha256sum -c owncloud-x.y.z.tar.bz2.sha256 < owncloud-x.y.z.tar.bz2
 
-	``md5sum  -c owncloud-x.y.z.zip.md5 < owncloud-x.y.z.zip``
+    md5sum  -c owncloud-x.y.z.zip.md5 < owncloud-x.y.z.zip
 
-	``sha256sum  -c owncloud-x.y.z.zip.sha256 < owncloud-x.y.z.zip``
+    sha256sum  -c owncloud-x.y.z.zip.sha256 < owncloud-x.y.z.zip
 	
 5. Verify the PGP signature for authenticity:
      
-	``wget https://download.owncloud.org/community/owncloud-x.y.z.tar.bz2.asc``
+    wget https://download.owncloud.org/community/owncloud-x.y.z.tar.bz2.asc
 
-	``wget https://owncloud.org/owncloud.asc``
+    wget https://owncloud.org/owncloud.asc
 
-	``gpg --import owncloud.asc``
+    gpg --import owncloud.asc
 
-	``gpg --verify owncloud-x.y.z.tar.bz2.asc owncloud-x.y.z.tar.bz2``
+    gpg --verify owncloud-x.y.z.tar.bz2.asc owncloud-x.y.z.tar.bz2
   
 6. Extract the archive contents to a single ownCloud directory by running the appropriate command for your archive type: 
 
-	``tar -xjf owncloud-x.y.z.tar.bz2``
+    tar -xjf owncloud-x.y.z.tar.bz2
 
-	``unzip owncloud-x.y.z.zip``
+    unzip owncloud-x.y.z.zip
 
 7. Copy the ownCloud directory to the appropriate directory. If you are running the Apache HTTP server, copy it to your Apache *document root* by using the following command:  
 
-	``cp -r owncloud /path/to/webserver/document-root``
+    cp -r owncloud /path/to/webserver/document-root
 
-	Where */path/to/webserver/document-root* is the path to your Web server, for example: ``cp -r owncloud /var/www``
+Where */path/to/webserver/document-root* is the path to your Web server, for example: ``cp -r owncloud /var/www``
 
-	*Note: On other HTTP servers, install ownCloud outside of the document root.*
+*Note: On other HTTP servers, install ownCloud outside of the document root.*
 
 ### Configure Apache web server
 
 
 1. On Debian, Ubuntu, and their derivatives, create a ``/etc/apache2/sites-available/owncloud.conf`` file with these lines in it, replacing the *Directory* and other file paths with your own file paths:
 
-	``Alias /owncloud "/var/www/owncloud/"``
+    Alias /owncloud "/var/www/owncloud/"
 	
-	``<Directory /var/www/owncloud/>``
+    <Directory /var/www/owncloud/>
+     Options +FollowSymlinks
+     AllowOverride All
 	
-	``Options +FollowSymlinks``
+    <IfModule mod_dav.c>
+     Dav off
+    </IfModule>
 	
-	`AllowOverride All``
+    SetEnv HOME /var/www/owncloud
+    SetEnv HTTP_HOME /var/www/owncloud
 	
-	``<IfModule mod_dav.c>``
-	
-	``Dav off``
-	
-	`` </IfModule>``
-	
-	``SetEnv HOME /var/www/owncloud``
-	
-	``SetEnv HTTP_HOME /var/www/owncloud``
-	
-	``</Directory>``
+    </Directory>
 
 2. Create a symbolic link to ``/etc/apache2/sites-enabled``:
 
-	``ln -s /etc/apache2/sites-available/owncloud.conf /etc/apache2/sites-enabled/owncloud.conf``
+    ln -s /etc/apache2/sites-available/owncloud.conf /etc/apache2/sites-enabled/owncloud.conf
 
-3. Enable required and recommended modules:
+3. Enable required modules:
 
-    ``a2enmod rewrite``
+    a2enmod rewrite
 
-    ``a2enmod headers``
+    a2enmod headers
 
-    ``a2enmod env``
+    a2enmod env
 
-    ``a2enmod dir``
+    a2enmod dir
 
-    ``a2enmod mime``
+    a2enmod mime
 
 4. Disable any server-configured authentication for ownCloud, because ownCloud uses Basic authentication internally for DAV services. 
 
@@ -147,12 +141,12 @@ Follow these steps to install ownCloud:
 
 6. Restart Apache:
 
-	``service apache2 restart``
+    service apache2 restart
 
 
 ### Enable SSL
 
-It is recommended that you use SSL/TLS to encrypt all of your server traffic, and to protect user log-ins and data in transit.
+It is recommended that you use SSL/TLS to encrypt all of your server traffic, and to protect user logins and data in transit.
 
 To enable Apache's ``ssl`` module and default site, in a terminal window, enter the following commands:
 
@@ -193,7 +187,7 @@ Login names may contain letters (a-z, A-Z), numbers (0-9), dashes (-), underscor
 
 3. Click **Create**.
 	
-4. Optionally fill in a user's full name if it is different than the login name, or leave it for the user to complete.
+4. Optionally enter a user's full name if it is different than the login name.
 	
 
 ## Connect to the ownCloud Server Using a Desktop or Mobile Client
@@ -204,14 +198,14 @@ Users connect to the ownCloud server using either a desktop or mobile client.
 
 You can download the latest version of the ownCloud Desktop Synchronization Client from the [ownCloud download page](https://owncloud.com/download/#desktop-clients). 
 
-* On Mac OS X and Windows, download the installation program and double-click it to launch the installation, and then follow the installation wizard. After it is installed and configured the sync client will automatically keep itself updated.
+* On Mac OS X and Windows, double-click the installer and follow the setup wizard to complete the installation. After the sync client is installed and configured, it will get updated automatically.
 
-* On Linux systems, follow the instructions on the download page to add the appropriate repository for their Linux distribution, install the signing key, and use their package managers to install the desktop sync client. Linux users must also have a password manager enabled, such as GNOME Keyring or KWallet, so that the sync client can log in automatically.
+* On Linux systems, follow the instructions on the download page to add the appropriate repository for your Linux distribution, install the signing key, and use the package managers to install the desktop sync client. Ensure that password manager, such as GNOME Keyring or KWallet, is enabled, so that the sync client can log in automatically.
 
-
+ 
 ### Connecting with a mobile client
 
-To connect to ownCloud with a mobile device, install the [ownCloud mobile application](https://owncloud.com/apps/).  After doing so, you can browse all of your ownCloud synced files, create and edit new files, share these files and folders with others, and keep the contents of those folders in sync across all of your devices. 
+To connect to ownCloud with a mobile device, install the [ownCloud mobile application](https://owncloud.com/apps/).  After doing so, you can browse all of your ownCloud synced files, create and edit files, share files and folders with others, and keep the contents of those folders in sync across all of your devices. 
 
 
 ## What's Next
