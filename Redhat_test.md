@@ -106,18 +106,18 @@ Where */path/to/webserver/document-root* is the path to your Web server, for exa
 
     ``Alias /owncloud "/var/www/owncloud/"``
 	
-    ``<Directory /var/www/owncloud/>``
-    ``Options +FollowSymlinks``
-     ``AllowOverride All``
+    ``<Directory /var/www/owncloud/>``  
+    `` Options +FollowSymlinks``  
+    `` AllowOverride All``
 	
-    ``<IfModule mod_dav.c>``
-    ``Dav off``
+    ``<IfModule mod_dav.c>``  
+    `` Dav off``  
     ``</IfModule>``
 	
-    ``SetEnv HOME /var/www/owncloud``
+    ``SetEnv HOME /var/www/owncloud``  
     ``SetEnv HTTP_HOME /var/www/owncloud``
 	
-    </Directory>
+    ``</Directory>``
 
 2. Create a symbolic link to ``/etc/apache2/sites-enabled``:
 
@@ -125,10 +125,10 @@ Where */path/to/webserver/document-root* is the path to your Web server, for exa
 
 3. Enable required modules:
 
-    ``a2enmod rewrite``
-    ``a2enmod headers``
-    ``a2enmod env``
-    ``a2enmod dir``
+    ``a2enmod rewrite``  
+    ``a2enmod headers``  
+    ``a2enmod env``  
+    ``a2enmod dir``  
     ``a2enmod mime``
 
 4. Disable any server-configured authentication for ownCloud, because ownCloud uses Basic authentication internally for DAV services. 
