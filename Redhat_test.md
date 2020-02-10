@@ -1,4 +1,4 @@
-# ownCloud Quick Start Guide#
+# ownCloud Quick Start Guide
 
 This guide provides information about how to install a standard (community) ownCloud edition for Linux. All components will be installed on a single machine. This type of installation is recommended for small groups or departments of up to 150 users. 
 
