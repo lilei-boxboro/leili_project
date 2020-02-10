@@ -15,6 +15,7 @@ This guide describes how to do the following.
 
 ## Installing and Configuring an ownCloud Server ##
 
+Perform the tasks in this section to install and configure the ownCloud Server.
 
 ### Deployment recommendations ###
 
